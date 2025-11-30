@@ -1,0 +1,31 @@
+version: '3.9'
+services:
+  mysql-db:
+    image: mysql:8
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: studentdb
+      MYSQL_USER: studentuser
+      MYSQL_PASSWORD: password
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  student-app:
+    build: .
+    container_name: student-management-app
+    depends_on:
+      - mysql-db
+    command: ["./wait-for-it.sh", "mysql-db:3306", "--", "java", "-jar", "/app/student-management.jar"]
+    ports:
+      - "8089:8089"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/studentdb?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: studentuser
+      SPRING_DATASOURCE_PASSWORD: password
+
+volumes:
+  mysql-data:
+
