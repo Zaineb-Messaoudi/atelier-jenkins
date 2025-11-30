@@ -1,0 +1,13 @@
+C:\Users\chaim\IdeaProjects\student-management\src\main\java\tn\esprit\studentmanagement\controllers\StudentController.java
+C:\Users\chaim\IdeaProjects\student-management\src\main\java\tn\esprit\studentmanagement\entities\Course.java
+C:\Users\chaim\IdeaProjects\student-management\src\main\java\tn\esprit\studentmanagement\entities\Department.java
+C:\Users\chaim\IdeaProjects\student-management\src\main\java\tn\esprit\studentmanagement\entities\Enrollment.java
+C:\Users\chaim\IdeaProjects\student-management\src\main\java\tn\esprit\studentmanagement\entities\Status.java
+C:\Users\chaim\IdeaProjects\student-management\src\main\java\tn\esprit\studentmanagement\entities\Student.java
+C:\Users\chaim\IdeaProjects\student-management\src\main\java\tn\esprit\studentmanagement\repositories\CourseRepository.java
+C:\Users\chaim\IdeaProjects\student-management\src\main\java\tn\esprit\studentmanagement\repositories\DepartmentRepository.java
+C:\Users\chaim\IdeaProjects\student-management\src\main\java\tn\esprit\studentmanagement\repositories\EnrollmentRepository.java
+C:\Users\chaim\IdeaProjects\student-management\src\main\java\tn\esprit\studentmanagement\repositories\StudentRepository.java
+C:\Users\chaim\IdeaProjects\student-management\src\main\java\tn\esprit\studentmanagement\services\IStudentService.java
+C:\Users\chaim\IdeaProjects\student-management\src\main\java\tn\esprit\studentmanagement\services\StudentService.java
+C:\Users\chaim\IdeaProjects\student-management\src\main\java\tn\esprit\studentmanagement\StudentManagementApplication.java
