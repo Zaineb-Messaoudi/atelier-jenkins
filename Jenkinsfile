@@ -41,6 +41,14 @@ pipeline {
             }
         }
 
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {  // Name must match Jenkins SonarQube server config
+                    sh "mvn sonar:sonar -Dsonar.projectKey=student-management-app"
+                }
+            }
+        }
+
         stage('Ensure Docker Network') {
             steps {
                 script {
