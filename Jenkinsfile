@@ -23,6 +23,7 @@ pipeline {
         APP_PORT = "8089"
         MYSQL_PORT = "3307"
         DOCKER_NETWORK = "student-network"
+        K8S_NAMESPACE = "student-management" 
     }
 
     stages {
@@ -113,16 +114,32 @@ pipeline {
                     )
                 ]) {
                     sh '''
-                        docker build -t student-management-student-app .
+                        docker build -t $DOCKER_IMAGE_NAME .
                         echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                        docker tag student-management-student-app $DOCKERHUB_REPO:latest
+                        docker tag $DOCKER_IMAGE_NAME $DOCKERHUB_REPO:latest
                         docker push $DOCKERHUB_REPO:latest
                     '''
                 }
             }
         }
 
-        stage('Redeploy Application') {
+        stage('Deploy to Kubernetes') {
+            steps {
+                withEnv(["KUBECONFIG=/var/lib/jenkins/.kube/config"]) {
+                    sh '''
+                        kubectl apply -f k8s/mysql-pv.yaml -n $K8S_NAMESPACE
+                        kubectl apply -f k8s/mysql-deployment.yaml -n $K8S_NAMESPACE
+                        kubectl apply -f k8s/springboot-deployment.yaml -n $K8S_NAMESPACE
+                        kubectl apply -f k8s/springboot-service.yaml -n $K8S_NAMESPACE
+        
+                        kubectl rollout status deployment/mysql -n $K8S_NAMESPACE
+                        kubectl rollout status deployment/student-app -n $K8S_NAMESPACE
+                    '''
+                }
+            }
+        }
+
+        stage('Redeploy Application Locally (Docker)') {
             steps {
                 sh '''
                     docker stop student-management-app || true
@@ -134,7 +151,7 @@ pipeline {
                       -e SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/studentdb \
                       -e SPRING_DATASOURCE_USERNAME=studentuser \
                       -e SPRING_DATASOURCE_PASSWORD=password \
-                      zainebmessaoudi/student-management-student-app:latest
+                      $DOCKERHUB_REPO:latest
                 '''
             }
         }
@@ -142,7 +159,7 @@ pipeline {
 
     post {
         success {
-            echo "✅ App running at http://localhost:8089/student"
+            echo "✅ App is running locally at http://localhost:8089/student and deployed to Kubernetes at namespace '$K8S_NAMESPACE'"
         }
         failure {
             echo "❌ Pipeline failed"
